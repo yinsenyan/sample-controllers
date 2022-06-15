@@ -179,7 +179,7 @@ func (c *Controller) processNextWorkItem() bool {
 		// Clusternet resource to be synced.
 		if err := c.syncHandler(key); err != nil {
 			c.workqueue.AddRateLimited(key)
-			return fmt.Errorf("Error syncing '%s': %s, requeuing", key, err.Error())
+			return fmt.Errorf("error syncing '%s': %s, requeuing", key, err.Error())
 		}
 
 		c.workqueue.Forget(obj)
@@ -251,6 +251,7 @@ func (c *Controller) syncHandler(key string) error {
 			}
 			if manifests == nil {
 				klog.Errorf("Manifest %s/%s not fount", feed.Namespace, feed.Name)
+				return
 			}
 			gvk, err := getGroupVersionKind(manifests[0].Template.Raw)
 			if err != nil {
